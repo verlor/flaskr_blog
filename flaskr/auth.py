@@ -7,6 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskr.db import get_db
 
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
@@ -37,6 +38,7 @@ def load_logged_in_user():
 
 
 @bp.route('/register', methods=('GET', 'POST'))
+@login_required
 def register():
     """Register a new user.
     Validates that the username is not already taken. Hashes the
@@ -45,6 +47,7 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        user_al  = request.form['user_alias']
         db = get_db()
         error = None
 
@@ -61,8 +64,8 @@ def register():
             # the name is available, store it in the database and go to
             # the login page
             db.execute(
-                'INSERT INTO user (username, password) VALUES (?, ?)',
-                (username, generate_password_hash(password))
+                'INSERT INTO user (username, user_alias, password) VALUES (?, ? , ?)',
+                (username,user_al, generate_password_hash(password))
             )
             db.commit()
             return redirect(url_for('auth.login'))
@@ -77,7 +80,7 @@ def login():
     """Log in a registered user by adding the user id to the session."""
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = request.form['password']   
         db = get_db()
         error = None
         user = db.execute(

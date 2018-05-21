@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS post;
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
+  user_alias TEXT NOT NULL,
   password TEXT NOT NULL
 );
 
@@ -15,3 +16,5 @@ CREATE TABLE post (
   body TEXT NOT NULL,
   FOREIGN KEY (author_id) REFERENCES user (id)
 );
+
+INSERT INTO user (username, user_alias, password) VALUES ('admin', 'Noe A. Eseiza' , 'pbkdf2:sha256:50000$orl7OTte$6fc982e945bb9f3dad6d7838b4fce9ba7b5d26cb9885dc5e30b21eb1b56c34c8')
